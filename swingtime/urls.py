@@ -1,12 +1,24 @@
 from django.conf.urls import url
+
+from django.urls import path
 from swingtime import views
 
 urlpatterns = [
-    url(
-        r'^(?:calendar/)?$',
+    path(
+        '',
+        views.month_view,
+        name='swingtime-month'
+    ),
+    path(
+        'today/',
         views.today_view,
         name='swingtime-today'
-    ),
+        ),
+#    url(
+#        r'^(?:calendar/)?$',
+#        views.today_view,
+#        name='swingtime-today'
+#    ),
 
     url(
         r'^calendar/(?P<year>\d{4})/$',
@@ -42,6 +54,11 @@ urlpatterns = [
         r'^events/(\d+)/$',
         views.event_view,
         name='swingtime-event'
+    ),
+    path(
+        'events/delete/<int:pk>/',
+        views.EventDelete.as_view(),
+        name='swingtime-delete'
     ),
 
     url(

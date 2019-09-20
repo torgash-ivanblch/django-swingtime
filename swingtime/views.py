@@ -7,6 +7,8 @@ from django import http
 from django.db import models
 from django.template.context import RequestContext
 from django.shortcuts import get_object_or_404, render
+from django.views.generic.edit import DeleteView
+from django.urls import reverse_lazy
 
 from .models import Event, Occurrence
 from . import utils, forms
@@ -38,6 +40,11 @@ def event_listing(
     events = events or Event.objects.all()
     extra_context['events'] = events
     return render(request, template, extra_context)
+
+
+class EventDelete(DeleteView):
+    model = Event
+    success_url = reverse_lazy('swingtime-events')
 
 
 def event_view(
@@ -269,8 +276,8 @@ def year_view(request, year, template='swingtime/yearly_view.html', queryset=Non
 
 def month_view(
     request,
-    year,
-    month,
+    year=None,
+    month=None,
     template='swingtime/monthly_view.html',
     queryset=None
 ):
@@ -297,7 +304,15 @@ def month_view(
         this_month - 1 month
 
     '''
-    year, month = int(year), int(month)
+    if year:
+        year = int(year)
+    else:
+        year = datetime.now().year
+        
+    if month:
+        month = int(month)
+    else:
+        month = datetime.now().month
     cal = calendar.monthcalendar(year, month)
     dtstart = datetime(year, month, 1)
     last_day = max(cal[-1])

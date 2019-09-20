@@ -281,6 +281,9 @@ class MultipleOccurrenceForm(forms.Form):
     )
 
     is_year_month_ordinal = forms.BooleanField(required=False)
+
+    is_year_byeaster = forms.BooleanField(required=False)
+    
     year_month_ordinal = forms.IntegerField(
         widget=forms.Select(choices=ORDINAL),
         required=False
@@ -290,6 +293,13 @@ class MultipleOccurrenceForm(forms.Form):
         widget=forms.Select(choices=WEEKDAY_LONG),
         required=False
     )
+
+    year_easter = forms.IntegerField(
+        label=_('days after Easter'),
+        initial=0,
+        required=False,
+        widget=forms.TextInput(attrs=dict(size=3, max_length=3)))
+        
 
     def __init__(self, *args, **kws):
         super().__init__(*args, **kws)
@@ -370,12 +380,17 @@ class MultipleOccurrenceForm(forms.Form):
                 params['bymonthday'] = data['each_month_day']
 
         elif params['freq'] == rrule.YEARLY:
-            params['bymonth'] = data['year_months']
-            if data['is_year_month_ordinal']:
-                ordinal = data['year_month_ordinal']
-                day = iso[data['year_month_ordinal_day']]
-                params['byweekday'] = day(ordinal)
-
+            if data['is_year_byeaster']:
+                print("Easter!")
+                days_after_easter = data['year_easter'] or 0
+                params['byeaster'] = days_after_easter
+            else:        
+                params['bymonth'] = data['year_months']
+                if data['is_year_month_ordinal']:
+                    ordinal = data['year_month_ordinal']
+                    day = iso[data['year_month_ordinal_day']]
+                    params['byweekday'] = day(ordinal)
+                    
         elif params['freq'] != rrule.DAILY:
             raise NotImplementedError(_('Unknown interval rule ' + params['freq']))
 

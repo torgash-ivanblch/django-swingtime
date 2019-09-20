@@ -1,0 +1,47 @@
+
+#fullDiv {
+ 
+  margin: 0;
+  padding: 0;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  overflow: hidden;
+  
+}
+
+.calendarFlex ul {
+  margin: 0;
+  padding: 0;
+}
+
+.calendarFlex li {
+  float: left;
+  display: block;
+  width: 14.2857%;
+  text-align: center;
+  list-style-type: none;
+}
+
+
+
+.calendarFlex li:hover, li.today{
+  border-radius: 5px;
+  background-color: #1abc9c;
+  color: #ecf0f1;
+}
+
+.calendarFlex li.holiday{
+  border-radius: 5px;
+  background-color: #ffaaaa;
+  color: #ecf0f1;!important
+}
+
+.calendarFlex a{
+    color: #036603;
+}
+.calendarFlex li.holiday a, li.today a{
+    color: white;
+}
+
